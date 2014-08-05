@@ -76,8 +76,9 @@ class StatusPktSource(OrbreapThr):
         pktno += 1
 
         if pktid < 0:
-            log.msg("%r reap %r (pktid #%d): skipping packet due to negative" +
-                    " pktid" % (self.orbname, srcname, pktid))
+            log.msg(
+                "%r reap %r (pktid #%d): skipping packet due to negative pktid"\
+                % (self.orbname, srcname, pktid))
             raise NoData()
 
         log.msg("%r reap %r (pktid #%d): %d bytes" % (self.orbname, srcname,
