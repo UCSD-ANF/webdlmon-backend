@@ -75,11 +75,12 @@ class StatusPktSource(OrbreapThr):
         pktid, srcname, timestamp, raw_packet = r
         pktno += 1
 
-        if pktid < 0:
-            log.msg(
-                "%r reap %r (pktid #%d): skipping packet due to negative pktid"\
-                % (self.orbname, srcname, pktid))
-            raise NoData()
+        # orb.h defines STASH_PKTID as -16 so negative ids are ok
+        #if pktid < 0:
+        #    log.msg(
+        #        "%r reap %r (pktid #%d): skipping packet due to negative pktid"\
+        #        % (self.orbname, srcname, pktid))
+        #    raise NoData()
 
         log.msg("%r reap %r (pktid #%d): %d bytes" % (self.orbname, srcname,
                                                       pktid, len(raw_packet)))
