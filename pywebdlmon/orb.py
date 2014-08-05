@@ -11,7 +11,7 @@ from antelope import stock
 
 from antelope.brttpkt import NoData
 from kudu.twisted.orbreapthread import OrbreapThr
-from antelope.Pkt import Packet
+from antelope.Pkt import Packet, UnstuffError
 
 
 pktno = 0
@@ -87,7 +87,7 @@ class StatusPktSource(OrbreapThr):
         # TODO Should this jazz be pushed down the callback chain?
         try:
             packet = Packet(srcname, timestamp, raw_packet)
-        except antelope.Pkt.UnstuffError, e:
+        except UnstuffError, e:
             log.msg("%r reap %r: unStuff failed for pktid #%d)" % (
                 self.orbname, srcname, pktid))
             raise NoData()
