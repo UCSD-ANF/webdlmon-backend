@@ -74,8 +74,8 @@ class StatusPktSource(OrbreapThr):
         global pktno
         pktid, srcname, timestamp, raw_packet = r
         pktno += 1
-        log.msg("%r reap pkt #%d: %d bytes" % (self.orbname, pktno,
-            len(raw_packet)))
+        log.msg("%r reap %r (pktid #%d): %d bytes" % (self.orbname, srcname,
+                                                      pktid, len(raw_packet)))
         # TODO Should this jazz be pushed down the callback chain?
         packet = Packet(srcname, timestamp, raw_packet)
         pkttypename = packet.type.name
