@@ -74,10 +74,23 @@ class StatusPktSource(OrbreapThr):
         global pktno
         pktid, srcname, timestamp, raw_packet = r
         pktno += 1
+
+        if pktid < 0:
+            log.msg("%r reap %r (pktid #%d): skipping packet due to negative" +
+                    " pktid" % (self.orbname, srcname, pktid))
+            raise NoData()
+
         log.msg("%r reap %r (pktid #%d): %d bytes" % (self.orbname, srcname,
                                                       pktid, len(raw_packet)))
+
         # TODO Should this jazz be pushed down the callback chain?
-        packet = Packet(srcname, timestamp, raw_packet)
+        try:
+            packet = Packet(srcname, timestamp, raw_packet)
+        except antelope.Pkt.UnstuffError, e:
+            log.msg("%r reap %r: unStuff failed for pktid #%d)" % (
+                self.orbname, srcname, pktid))
+            raise NoData()
+
         pkttypename = packet.type.name
         if pkttypename not in ('st', 'pf', 'stash'):
             raise NoData()
@@ -88,6 +101,7 @@ class StatusPktSource(OrbreapThr):
             pfdict = packet.pf.pf2dict()
         updated_stations = self.pfmorph(pfdict, timestamp, srcname)
         return updated_stations
+
 
     def get(self):
         d = super(StatusPktSource, self).get()
