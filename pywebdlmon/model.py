@@ -14,7 +14,6 @@ from antelope.orb import ORBOLDEST
 
 from pywebdlmon.orb import StatusPktSource
 
-
 FORMATS = ('html', 'json')
 
 REAP_TIMEOUT = 2.0
@@ -170,15 +169,7 @@ class Instance(DataObject):
         return d
 
     def on_get_error(self, failure, source):
-        if failure.check(Timeout, NoData):
-            pass # just want to catch this
-        elif failure.check(UnstuffError):
-            # try to skip packets and restart the orbreapthr instance
-            source.pause(1)
-            source.seek(orb.ORBNEWEST)
-            source.resume()
-        else:
-            failure.raiseException()
+        failure.trap(Timeout, NoData)
         return self.get(source)
 
     def on_get(self, pfdict, source):

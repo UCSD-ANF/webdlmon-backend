@@ -9,6 +9,7 @@ from twisted.python import log
 
 from antelope import stock
 
+from antelope.orb import ORBNEWEST
 from antelope.brttpkt import NoData
 from kudu.twisted.orbreapthread import OrbreapThr
 from antelope.Pkt import Packet, UnstuffError
@@ -86,12 +87,15 @@ class StatusPktSource(OrbreapThr):
                                                       pktid, len(raw_packet)))
 
         # TODO Should this jazz be pushed down the callback chain?
-        #try:
-        #    packet = Packet(srcname, timestamp, raw_packet)
-        #except UnstuffError, e:
-        #    log.msg("%r reap %r: unStuff failed for pktid #%d)" % (
-        #        self.orbname, srcname, pktid))
-        #    raise NoData()
+        try:
+            packet = Packet(srcname, timestamp, raw_packet)
+        except UnstuffError, e:
+            log.msg("%r reap %r: unStuff failed for pktid #%d)" % (
+                self.orbname, srcname, pktid))
+            self.pause(1)
+            self.seek(ORBNEWEST)
+            self.resume()
+            raise NoData()
         packet = Packet(srcname, timestamp, raw_packet)
 
         pkttypename = packet.type.name
