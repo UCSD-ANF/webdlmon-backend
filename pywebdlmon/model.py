@@ -170,7 +170,15 @@ class Instance(DataObject):
         return d
 
     def on_get_error(self, failure, source):
-        failure.trap(Timeout, NoData)
+        if failure.check(Timeout, NoData):
+            pass # just want to catch this
+        elif failure.check(UnstuffError):
+            # try to skip packets and restart the orbreapthr instance
+            source.pause(1)
+            source.seek(orb.ORBNEWEST)
+            source.resume()
+        else:
+            failure.raiseException()
         return self.get(source)
 
     def on_get(self, pfdict, source):

@@ -86,12 +86,13 @@ class StatusPktSource(OrbreapThr):
                                                       pktid, len(raw_packet)))
 
         # TODO Should this jazz be pushed down the callback chain?
-        try:
-            packet = Packet(srcname, timestamp, raw_packet)
-        except UnstuffError, e:
-            log.msg("%r reap %r: unStuff failed for pktid #%d)" % (
-                self.orbname, srcname, pktid))
-            raise NoData()
+        #try:
+        #    packet = Packet(srcname, timestamp, raw_packet)
+        #except UnstuffError, e:
+        #    log.msg("%r reap %r: unStuff failed for pktid #%d)" % (
+        #        self.orbname, srcname, pktid))
+        #    raise NoData()
+        packet = Packet(srcname, timestamp, raw_packet)
 
         pkttypename = packet.type.name
         if pkttypename not in ('st', 'pf', 'stash'):
