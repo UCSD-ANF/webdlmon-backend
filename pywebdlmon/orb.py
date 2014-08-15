@@ -8,6 +8,7 @@ from calendar import timegm
 from twisted.python import log
 
 from antelope import stock
+from antelope import brttpkt
 
 from antelope.orb import ORBNEWEST
 from antelope.brttpkt import NoData
@@ -92,9 +93,9 @@ class StatusPktSource(OrbreapThr):
         except UnstuffError, e:
             log.msg("%r reap %r: unStuff failed for pktid #%d)" % (
                 self.orbname, srcname, pktid))
-            self.pause(1)
-            self.seek(ORBNEWEST)
-            self.resume()
+            brttpkt.OrbreapThr.pause(self, pause)
+            brttpkt.OrbreapThr.seek(self, ORBNEWEST)
+            brttpkt.OrbreapThr.resume(self)
             raise NoData()
         packet = Packet(srcname, timestamp, raw_packet)
 
