@@ -93,9 +93,10 @@ class StatusPktSource(OrbreapThr):
         except UnstuffError, e:
             log.msg("%r reap %r: unStuff failed for pktid #%d)" % (
                 self.orbname, srcname, pktid))
-            brttpkt.OrbreapThr.pause(self, pause)
-            brttpkt.OrbreapThr.seek(self, ORBNEWEST)
-            brttpkt.OrbreapThr.resume(self)
+            # Pause/Seek/Resume Not available until 5.4
+            #self.pause(1)
+            #self.seek(ORBNEWEST)
+            #self.resume()
             raise NoData()
         packet = Packet(srcname, timestamp, raw_packet)
 
