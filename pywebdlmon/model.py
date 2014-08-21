@@ -155,9 +155,10 @@ class Instance(DataObject):
         self.station_list = StationList(instance_name, cfg)
         self.instance_update = InstanceUpdate(instance_name, cfg)
         for source in sources:
-            log.msg("connecting to src %r" % source)
+            log.msg("connecting to src %r" % source.orbname)
             # NOTE this is handy for debugging but maybe not for production
-            # source.seek(ORBOLDEST)
+	    log.msg("Rewinding to ORBOLDEST for src %r" % source.orbname)
+            source.seek(ORBOLDEST)
             self.get(source)
         super(Instance, self).__init__(cfg, *args, **kwargs)
 
