@@ -1,0 +1,1 @@
+import sys,os,site; sys.path.append(os.path.join(os.environ['ANTELOPE'],'data','python')); site.addsitedir(os.path.join(os.environ['ANF'],'lib','python'));sys.path.append( os.path.join(os.environ['ANF'],'data','python'))
