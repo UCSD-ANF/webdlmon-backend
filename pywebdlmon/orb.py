@@ -14,9 +14,11 @@ from antelope.orb import ORBNEWEST
 from antelope.brttpkt import NoData
 from kudu.twisted.orbreapthread import OrbreapThr
 from antelope.Pkt import Packet, UnstuffError
+from threading import Lock
 
 
 pktno = 0
+pktmutex = Lock()
 
 
 class StatusPktSource(OrbreapThr):
@@ -89,6 +91,7 @@ class StatusPktSource(OrbreapThr):
 
         # TODO Should this jazz be pushed down the callback chain?
         try:
+            pktmutex.acquire()
             packet = Packet(srcname, timestamp, raw_packet)
         except UnstuffError, e:
             log.msg("%r reap %r: unStuff failed for pktid #%d)" % (
@@ -98,6 +101,8 @@ class StatusPktSource(OrbreapThr):
             #self.seek(ORBNEWEST)
             #self.resume()
             raise NoData()
+        finally:
+            pktmutex.release()
 
         pkttypename = packet.type.name
         if pkttypename not in ('st', 'pf', 'stash'):
