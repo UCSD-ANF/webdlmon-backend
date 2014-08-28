@@ -98,7 +98,6 @@ class StatusPktSource(OrbreapThr):
             #self.seek(ORBNEWEST)
             #self.resume()
             raise NoData()
-        packet = Packet(srcname, timestamp, raw_packet)
 
         pkttypename = packet.type.name
         if pkttypename not in ('st', 'pf', 'stash'):
