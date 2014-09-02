@@ -13,19 +13,19 @@ from antelope import brttpkt
 from antelope.orb import ORBNEWEST
 from antelope.brttpkt import NoData
 from kudu.twisted.orbreapthread import OrbreapThr
-from antelope.Pkt import Packet, UnstuffError, PfError
+from antelope.Pkt import Packet, UnstuffError
 from threading import Lock
 
 
 pktno = 0
 pktmutex = Lock()
 
-# MonkeyPatch antelope.Pkt due to missing PfCompileError (BRTT #686)
+# MonkeyPatch antelope.stock due to missing PfCompileError (BRTT #686)
 # This should work around a NameError being raised during unstuff
-class PfCompileError(PfError):
+class PfCompileError(stock.PfError):
     pass
 
-antelope.Pkt.PfCompileError=PfCompileError
+antelope.stock.PfCompileError=PfCompileError
 # End MonkeyPatch
 
 
