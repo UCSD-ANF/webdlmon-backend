@@ -25,7 +25,7 @@ pktmutex = Lock()
 class PfCompileError(stock.PfError):
     pass
 
-antelope.stock.PfCompileError=PfCompileError
+stock.PfCompileError=PfCompileError
 # End MonkeyPatch
 
 
