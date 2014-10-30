@@ -99,27 +99,30 @@ class StatusPktSource(OrbreapThr):
 
         # TODO Should this jazz be pushed down the callback chain?
         try:
-            pktmutex.acquire()
             packet = Packet(srcname, timestamp, raw_packet)
-        except UnstuffError, e:
-            log.msg("%r reap %r: unStuff failed for pktid #%d)" % (
-                self.orbname, srcname, pktid))
+        except (Exception) as e:
+            log.msg("%r reap %r: unStuff failed for pktid #%d: %s" % (
+                self.orbname, srcname, pktid, e))
             # Pause/Seek/Resume Not available until 5.4
             #self.pause(1)
             #self.seek(ORBNEWEST)
             #self.resume()
             raise NoData()
-        finally:
-            pktmutex.release()
 
         pkttypename = packet.type.name
         if pkttypename not in ('st', 'pf', 'stash'):
             raise NoData()
-        pfstring = packet.string
-        if pfstring is not None and pfstring != '':
-            pfdict = self.pfstring_to_pfdict(pfstring)
-        else:
-            pfdict = packet.pf.pf2dict()
+        try:
+            pfstring = packet.string
+            if pfstring is not None and pfstring != '':
+                pfdict = self.pfstring_to_pfdict(pfstring)
+            else:
+                pfdict = packet.pf.pf2dict()
+        except (Exception) as e:
+            log.msg(
+                "%r reap %r: converting pkt to dict failed for pktid #%d: %s"
+                % (self,orbname, srcname, pktid, e))
+            raise NoData()
         updated_stations = self.pfmorph(pfdict, timestamp, srcname)
         return updated_stations
 
