@@ -121,7 +121,7 @@ class StatusPktSource(OrbreapThr):
         except (Exception) as e:
             log.msg(
                 "%r reap %r: converting pkt to dict failed for pktid #%d: %s"
-                % (self,orbname, srcname, pktid, e))
+                % (self.orbname, srcname, pktid, e))
             raise NoData()
         updated_stations = self.pfmorph(pfdict, timestamp, srcname)
         return updated_stations
