@@ -157,16 +157,16 @@ class Instance(DataObject):
         for source in sources:
             log.msg("connecting to src %r" % source.orbname)
 
-            try:
-                # NOTE this is handy for debugging but maybe not for production
-                log.msg("Rewinding to ORBOLDEST for src %r" % source.orbname)
-                source.pause(1)
-                source.seek(ORBOLDEST)
-                source.resume()
-            except AttributeError:
-                log.msg("This version of the Antelope bindings doesn't " + \
-                        "appear to support the seek method.")
-                pass
+            #try:
+            #    # NOTE this is handy for debugging but maybe not for production
+            #    log.msg("Rewinding to ORBOLDEST for src %r" % source.orbname)
+            #    source.pause(1)
+            #    source.seek(ORBOLDEST)
+            #    source.resume()
+            #except AttributeError:
+            #    log.msg("This version of the Antelope bindings doesn't " + \
+            #            "appear to support the seek method.")
+            #    pass
 
             self.get(source)
 
