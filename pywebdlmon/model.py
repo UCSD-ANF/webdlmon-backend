@@ -110,7 +110,7 @@ class InstanceStatus(DataObject):
                 del self.status['dataloggers'][stn]
                 del self.stations[stn]
             except (KeyError) as e:
-                log.msg('model.update: key delete failed for %s: %s' % (stn, e)
+                log.msg('model.update: key delete failed for %s: %s' % (stn, e))
         self.status['dataloggers'].update(updated_stations['dataloggers'])
         self.status['metadata'] = updated_stations['metadata']
         status = dict(metadata=self.status['metadata'], dataloggers=self.status['dataloggers'].values())
