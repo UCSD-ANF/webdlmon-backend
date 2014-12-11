@@ -106,8 +106,11 @@ class InstanceStatus(DataObject):
     def update(self, updated_stations, dead_stations):
         # prune dead stations
         for stn in dead_stations:
-            del self.status['dataloggers'][stn]
-            del self.stations[stn]
+            try:
+                del self.status['dataloggers'][stn]
+                del self.stations[stn]
+            except (KeyError) as e:
+                log.msg('model.update: key delete failed for %s: %s' % (stn, e)
         self.status['dataloggers'].update(updated_stations['dataloggers'])
         self.status['metadata'] = updated_stations['metadata']
         status = dict(metadata=self.status['metadata'], dataloggers=self.status['dataloggers'].values())
@@ -184,7 +187,10 @@ class Instance(DataObject):
         return self.get(source)
 
     def on_get(self, pfdict, source):
-        r = self.update(pfdict)
+        try:
+            r = self.update(pfdict)
+        except (Exception) as e:
+            log.msg("Unknown error occurred during update: %s", e)
         self.get(source)
         return r
 
