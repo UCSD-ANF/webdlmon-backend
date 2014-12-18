@@ -74,6 +74,7 @@ class StatusPktSource(OrbreapThr):
                         'rx_timestamp': rx_timestamp,
                         'pktno': pktno,
                         'srcname': srcname,
+                        'orbname': self.orbname,
                     }
         updated_stations['metadata']['timestamp'] = timestamp
         updated_stations['metadata']['rx_timestamp'] = rx_timestamp
