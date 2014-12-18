@@ -87,7 +87,7 @@ class InstanceStatus(DataObject):
         # Individual station statuses
         self.stations = dict()
         # Full instance status in
-        self.status = dict(metadata=dict(), dataloggers=dict())
+        self.status = dict(metadata=dict(sources=dict()), dataloggers=dict())
         super(InstanceStatus, self).__init__(*args, **kwargs)
 
     def since(self, pktno):
@@ -113,11 +113,30 @@ class InstanceStatus(DataObject):
             except (KeyError) as e:
                 log.msg('model.update: key delete failed for %s: %s' % (stn, e))
         self.status['dataloggers'].update(updated_stations['dataloggers'])
-        self.status['metadata'] = updated_stations['metadata']
-        status = dict(metadata=self.status['metadata'], dataloggers=self.status['dataloggers'].values())
+
+        # Update metadata blob: timestamps, packet info, etc
+        # Stash the received updated_stations metadata in a per-source
+        # hash, then use the newest source for the top-level metadata
+        # Also track the oldest source name and oldest source timestamp
+        longsourcename = updated_stations['metadata']['orbname'] + ':' + \
+                updated_stations['metadata']['srcname']
+        self.status['metadata']['sources'][longsourcename]=updated_stations['metadata']
+        sources=self.status['metadata']['sources'].keys()
+        sources.sort(
+            key=lambda k: self.status['metadata']['sources'][k]['timestamp'])
+        self.status['metadata'].update(
+            self.status['metadata']['sources'][sources[-1]])
+        self.status['metadata']['oldest_source']=sources[0]
+        self.status['metadata']['oldest_source_timestamp']=\
+                self.status['metadata']['sources'][sources[0]]['timestamp']
+
+        # Update the superclass
+        status = dict(metadata=self.status['metadata'],
+                      dataloggers=self.status['dataloggers'].values())
         data = dict(instance_status=status)
         super(InstanceStatus, self).update(data, instance=self.instance_name)
-        # Now update my stations
+
+        # Now update self.stations
         for station_name, station_status in updated_stations['dataloggers'].iteritems():
             try:
                 station = self.stations[station_name]
