@@ -41,9 +41,9 @@ class StatusPktSource(OrbreapThr):
         pfdict = pfptr.pf2dict()
         return pfdict
 
-    def pfmorph(self, pfdict, timestamp, srcname):
+    def pfmorph(self, pfdict, timestamp, srcname, pktid):
         """Apply arcane transformations to incoming status data."""
-        rx_timestamp = str(int(timegm(datetime.utcnow().utctimetuple())))
+        rx_timestamp = int(timegm(datetime.utcnow().utctimetuple()))
         # TODO Would it be more appropriate for this to live in model.py?
         dls = dict()
         if pfdict.has_key('dls'):
@@ -73,12 +73,14 @@ class StatusPktSource(OrbreapThr):
                         'timestamp': timestamp,
                         'rx_timestamp': rx_timestamp,
                         'pktno': pktno,
+                        'orbpktid': pktid,
                         'srcname': srcname,
                         'orbname': self.orbname,
                     }
         updated_stations['metadata']['timestamp'] = timestamp
         updated_stations['metadata']['rx_timestamp'] = rx_timestamp
         updated_stations['metadata']['pktno'] = pktno
+        updated_stations['metadata']['orbpktid'] = pktid
         updated_stations['metadata']['srcname'] = srcname
         updated_stations['metadata']['orbname'] = self.orbname
         return updated_stations
@@ -125,7 +127,7 @@ class StatusPktSource(OrbreapThr):
                 "%r reap %r: converting pkt to dict failed for pktid #%d: %s"
                 % (self.orbname, srcname, pktid, e))
             raise NoData()
-        updated_stations = self.pfmorph(pfdict, timestamp, srcname)
+        updated_stations = self.pfmorph(pfdict, timestamp, srcname, pktid)
         return updated_stations
 
 
