@@ -13,6 +13,7 @@ from antelope.brttpkt import NoData, Timeout
 from antelope.orb import ORBOLDEST
 
 from pywebdlmon.orb import StatusPktSource
+import traceback
 
 FORMATS = ('html', 'json')
 
@@ -187,10 +188,11 @@ class Instance(DataObject):
         return self.get(source)
 
     def on_get(self, pfdict, source):
+        r=None
         try:
             r = self.update(pfdict)
         except (Exception) as e:
-            log.msg("Unknown error occurred during update: %s", e)
+            log.msg("Unknown error occurred during update:", traceback.format_exc())
         self.get(source)
         return r
 
