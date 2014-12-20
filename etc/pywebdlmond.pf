@@ -9,11 +9,11 @@
 match .*/pf/(st|vtw)
 #reject AZ_.* # We're not using this one
 
-# Listen on this address. 
+# Listen on this address.
 bind_address 0.0.0.0
 
 # Listen on this port.
-port 6999
+port 7000
 
 # Set the relative root URL - useful when behind a reverse proxy.
 # Defaults to "/"
@@ -39,29 +39,37 @@ instances &Arr{
 #       reject foobar
 #     }
 #
-#     # This Orb has no options. 
+#     # This Orb has no options.
 #     host1:orbname2
 #   }
 
   ta &Arr{
-    anfexport:status
-    anfexport:cascadia_status
+    taexport:status
+    taexport:cascadia_status
   }
 
   ta_prelim &Arr{
-    anfexport:prelim
+    taexport:prelim
+  }
+
+  ceusn &Arr{
+    ceusnexport.ucsd.edu:status
+  }
+
+  ceusn_prelim &Arr{
+    ceusnexport:prelim
   }
 
   chile &Arr{
-     anfops.ucsd.edu:chile_stat
+     anfchile.ucsd.edu:chile_stat
   }
 
   glisn &Arr{
-      anfexport.ucsd.edu:6591
+      taexport.ucsd.edu:6591
   }
 
   anza &Arr{
-      igpprt.ucsd.edu:status 
+      anzaacq.ucsd.edu:status 
   }
 }
 
