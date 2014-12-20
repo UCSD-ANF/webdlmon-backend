@@ -1,6 +1,6 @@
 # Source this to set the necessary env vars.
 
-antelope=/opt/antelope/5.3
+antelope=/opt/antelope/5.4
 
 . $antelope/setup.sh
 
