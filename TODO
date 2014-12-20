@@ -1,1 +1,3 @@
 * add backup parameter to seek back 5 minutes prior for some history
+* Write intermapper/nagios check script to verify instance is healthy
+* top level metadata or status for server?
